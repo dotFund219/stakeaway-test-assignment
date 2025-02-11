@@ -1,0 +1,11 @@
+groups:
+  - name: backend-alerts
+    rules:
+      - alert: ServiceDown
+        expr: up{job="backend"} == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Backend staking service is down"
+          description: "No response from backend service for 5 minutes."
