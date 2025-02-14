@@ -20,6 +20,8 @@ func setupRouter() *gin.Engine {
 	router.POST("/stake", handlers.StakeHandler)
 	router.GET("/rewards/:wallet_address", handlers.RewardHandler)
 	router.GET("/health", handlers.HealthHandler)
+	router.POST("/validators", handlers.CreateValidatorRequest)
+	router.GET("/validators/:id", handlers.GetRequestStatus)
 	return router
 }
 
@@ -104,4 +106,56 @@ func TestStakeHandlerInvalidJSON(t *testing.T) {
 
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 	assert.JSONEq(t, `{"error": "Invalid input"}`, w.Body.String())
+}
+
+// Test /validators endpoint - Invalid JSON Body
+func TestValidatorsHandlerInvalidJSON(t *testing.T) {
+	router := setupRouter()
+
+	req, _ := http.NewRequest("POST", "/validators", bytes.NewBuffer([]byte("{invalid json")))
+	req.Header.Set("Content-Type", "application/json")
+
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+	assert.JSONEq(t, `{"error": "Invalid request format"}`, w.Body.String())
+}
+
+// Test /validators endpoint - - Invalid Request (Negative Amount)
+func TestValidatorsHandlerNegativeNumValidator(t *testing.T) {
+	router := setupRouter()
+
+	requestBody, _ := json.Marshal(map[string]interface{}{
+		"num_validators": -5,
+		"fee_recipient":  "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+	})
+
+	req, _ := http.NewRequest("POST", "/validators", bytes.NewBuffer(requestBody))
+	req.Header.Set("Content-Type", "application/json")
+
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+	assert.JSONEq(t, `{"error": "The number of validators must be positive"}`, w.Body.String())
+}
+
+// Test /validators endpoint - - Invalid Request (Invalid Fee Recipient)
+func TestValidatorsHandlerInvalidFeeRecipient(t *testing.T) {
+	router := setupRouter()
+
+	requestBody, _ := json.Marshal(map[string]interface{}{
+		"num_validators": 5,
+		"fee_recipient":  "0x742d35Cc6634C0532925a3b844",
+	})
+
+	req, _ := http.NewRequest("POST", "/validators", bytes.NewBuffer(requestBody))
+	req.Header.Set("Content-Type", "application/json")
+
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+	assert.JSONEq(t, `{"error": "Fee recipient address is not valid format"}`, w.Body.String())
 }

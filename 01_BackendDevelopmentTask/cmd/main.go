@@ -25,6 +25,8 @@ func main() {
 	router.POST("/stake", handlers.StakeHandler)
 	router.GET("/rewards/:wallet_address", handlers.RewardHandler)
 	router.GET("/health", handlers.HealthHandler)
+	router.POST("/validators", handlers.CreateValidatorRequest)
+	router.GET("/validators/:id", handlers.GetRequestStatus)
 
 	// Expose Prometheus metrics
 	router.GET("/metrics", gin.WrapH(promhttp.Handler()))

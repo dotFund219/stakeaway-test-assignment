@@ -5,8 +5,11 @@ go 1.23.4
 require (
 	github.com/ethereum/go-ethereum v1.15.0
 	github.com/gin-gonic/gin v1.10.0
+	github.com/google/uuid v1.3.0
 	github.com/mattn/go-sqlite3 v1.14.24
+	github.com/prometheus/client_golang v1.20.5
 	github.com/stretchr/testify v1.10.0
+	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa
 )
 
 require (
@@ -33,7 +36,6 @@ require (
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/prometheus/client_golang v1.20.5 // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.55.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
@@ -45,6 +47,5 @@ require (
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
 	google.golang.org/protobuf v1.36.5 // indirect
-	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

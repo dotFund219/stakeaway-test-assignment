@@ -21,8 +21,14 @@ func InitDB() {
 		wallet_address TEXT UNIQUE,
 		amount REAL
 	);`
-
 	_, err = DB.Exec(createTable)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	createValidatorTable := `CREATE TABLE validator_requests (id TEXT PRIMARY KEY, num_validators INTEGER, fee_recipient TEXT, status TEXT, keys TEXT);`
+
+	_, err = DB.Exec(createValidatorTable)
 	if err != nil {
 		log.Fatal(err)
 	}
